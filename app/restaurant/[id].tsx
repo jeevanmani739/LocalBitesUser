@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator, StyleSheet, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, Star } from 'lucide-react-native';
+import { ArrowLeft, Star, Plus } from 'lucide-react-native';
 import { supabase } from '@/lib/supabase';
 import { Restaurant, MenuItem } from '@/types/database';
+import { useCartStore } from '@/store/useCartStore';
+import AddToCartModal from '@/components/AddToCartModal';
 
 export default function RestaurantScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const { addItem } = useCartStore();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -30,6 +35,26 @@ export default function RestaurantScreen() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function openAddToCartModal(item: MenuItem) {
+    setSelectedItem(item);
+    setModalVisible(true);
+  }
+
+  function handleAddToCart(quantity: number, specialRequests: string) {
+    if (!restaurant || !selectedItem) return;
+
+    addItem(
+      {
+        menu_item: selectedItem,
+        quantity,
+        special_requests: specialRequests || undefined,
+      },
+      restaurant
+    );
+
+    Alert.alert('Added to Cart', `${selectedItem.name} has been added to your cart`);
   }
 
   const groupedItems = menuItems.reduce((acc, item) => {
@@ -65,19 +90,36 @@ export default function RestaurantScreen() {
             <View key={cat} style={s.section}>
               <Text style={s.catTitle}>{cat}</Text>
               {items.map(item => (
-                <View key={item.id} style={s.item}>
+                <TouchableOpacity
+                  key={item.id}
+                  style={s.item}
+                  onPress={() => openAddToCartModal(item)}
+                  activeOpacity={0.7}
+                >
                   <Image source={{ uri: item.image_url || '' }} style={s.img} />
                   <View style={s.info}>
                     <Text style={s.itemName}>{item.name}</Text>
                     {item.description && <Text style={s.itemDesc} numberOfLines={2}>{item.description}</Text>}
-                    <Text style={s.price}>${Number(item.price).toFixed(2)}</Text>
+                    <View style={s.priceRow}>
+                      <Text style={s.price}>${Number(item.price).toFixed(2)}</Text>
+                      <View style={s.addBtn}>
+                        <Plus size={20} color="#22c55e" />
+                      </View>
+                    </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
           ))}
         </View>
       </ScrollView>
+
+      <AddToCartModal
+        visible={modalVisible}
+        item={selectedItem}
+        onClose={() => setModalVisible(false)}
+        onAdd={handleAddToCart}
+      />
     </SafeAreaView>
   );
 }
@@ -102,5 +144,7 @@ const s = StyleSheet.create({
   info: { flex: 1, marginLeft: 12, justifyContent: 'center' },
   itemName: { fontSize: 18, fontWeight: 'bold', marginBottom: 4 },
   itemDesc: { fontSize: 14, color: '#666', marginBottom: 8 },
+  priceRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   price: { fontSize: 16, fontWeight: 'bold', color: '#22c55e' },
+  addBtn: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#f0fdf4', alignItems: 'center', justifyContent: 'center' },
 });
