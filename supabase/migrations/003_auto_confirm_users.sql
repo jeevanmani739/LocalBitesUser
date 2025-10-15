@@ -5,19 +5,22 @@
   Automatically confirms user email addresses and creates user profiles on signup.
 
   ## Changes
-  1. Creates a trigger function to auto-confirm users
-  2. Creates a trigger function to auto-create profiles
-  3. Updates auth.users to confirm existing unconfirmed users
+  1. Creates a trigger function to auto-create profiles (with SECURITY DEFINER to bypass RLS)
+  2. Updates auth.users to confirm existing unconfirmed users
+  3. Creates profiles for existing users
 
   ## Security
-  - Maintains existing RLS policies on profiles table
+  - Uses SECURITY DEFINER on trigger function to bypass RLS during profile creation
+  - This is safe because the trigger only runs for new auth.users records
+  - Maintains existing RLS policies on profiles table for all other operations
 */
 
--- Function to automatically confirm users on signup
+-- Function to automatically create profiles for new users
+-- SECURITY DEFINER allows this function to bypass RLS policies
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- Create profile automatically
+  -- Create profile automatically with SECURITY DEFINER to bypass RLS
   INSERT INTO public.profiles (id, email, full_name, created_at, updated_at)
   VALUES (
     NEW.id,
