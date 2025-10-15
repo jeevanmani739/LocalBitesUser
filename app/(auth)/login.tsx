@@ -20,7 +20,15 @@ export default function LoginScreen() {
       await signIn(email, password);
       router.replace('/(tabs)');
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      let errorMessage = error.message;
+
+      if (errorMessage.includes('Email not confirmed')) {
+        errorMessage = 'Please check your email to confirm your account. If you registered recently, you may need to wait a moment and try again.';
+      } else if (errorMessage.includes('Invalid login credentials')) {
+        errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+      }
+
+      Alert.alert('Login Failed', errorMessage);
     } finally {
       setLoading(false);
     }

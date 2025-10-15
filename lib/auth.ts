@@ -5,6 +5,7 @@ export async function signUp(email: string, password: string, fullName: string) 
     email,
     password,
     options: {
+      emailRedirectTo: undefined,
       data: {
         full_name: fullName,
       },
@@ -12,6 +13,25 @@ export async function signUp(email: string, password: string, fullName: string) 
   });
 
   if (authError) throw authError;
+
+  if (authData.user) {
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .upsert({
+        id: authData.user.id,
+        email: authData.user.email!,
+        full_name: fullName,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'id',
+        ignoreDuplicates: false,
+      });
+
+    if (profileError) {
+      console.error('Error creating profile:', profileError);
+    }
+  }
 
   return authData;
 }
