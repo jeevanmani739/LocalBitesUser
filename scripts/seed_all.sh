@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Ensure running under bash
+if [ -z "$BASH_VERSION" ]; then
+  echo "Please run this script with bash (e.g. 'bash ./scripts/seed_all.sh')" >&2
+  exit 1
+fi
+
 # Prompt for missing env vars
 if [ -z "${SUPABASE_URL:-}" ]; then
   read -rp "Enter SUPABASE_URL (e.g. https://<ref>.supabase.co): " SUPABASE_URL
 fi
 
 if [ -z "${SERVICE_ROLE_KEY:-}" ]; then
+  # read without echo (works in bash)
   read -rsp "Enter SERVICE_ROLE_KEY (will not be echoed): " SERVICE_ROLE_KEY
   echo
 fi
@@ -22,13 +29,12 @@ done
 create_user() {
   local email="$1"
   local password="$2"
-  local resp
+  local resp id
   resp=$(curl -s -X POST "${SUPABASE_URL}/auth/v1/admin/users" \
     -H "apikey: ${SERVICE_ROLE_KEY}" \
     -H "Authorization: Bearer ${SERVICE_ROLE_KEY}" \
     -H "Content-Type: application/json" \
     -d "{\"email\":\"${email}\",\"password\":\"${password}\",\"email_confirm\":true}")
-  # Print whole response on error
   id=$(echo "$resp" | jq -r '.id // empty')
   if [ -z "$id" ]; then
     echo "Failed to create user ${email}. Full response:" >&2
