@@ -41,45 +41,74 @@ export type Database = {
     Tables: {
       addresses: {
         Row: {
+          apartment: string | null
           city: string
+          contact_name: string | null
+          contact_phone: string | null
+          country: string | null
           created_at: string | null
+          delivery_instructions: string | null
           id: string
           is_default: boolean | null
           label: string
+          landmark: string | null
           latitude: number | null
           longitude: number | null
           state: string
           street_address: string
+          updated_at: string | null
           user_id: string
           zip_code: string
         }
         Insert: {
+          apartment?: string | null
           city: string
+          contact_name?: string | null
+          contact_phone?: string | null
+          country?: string | null
           created_at?: string | null
+          delivery_instructions?: string | null
           id?: string
           is_default?: boolean | null
-          label: string
+          label?: string
+          landmark?: string | null
           latitude?: number | null
           longitude?: number | null
           state: string
           street_address: string
+          updated_at?: string | null
           user_id: string
           zip_code: string
         }
         Update: {
+          apartment?: string | null
           city?: string
+          contact_name?: string | null
+          contact_phone?: string | null
+          country?: string | null
           created_at?: string | null
+          delivery_instructions?: string | null
           id?: string
           is_default?: boolean | null
           label?: string
+          landmark?: string | null
           latitude?: number | null
           longitude?: number | null
           state?: string
           street_address?: string
+          updated_at?: string | null
           user_id?: string
           zip_code?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "addresses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       audit_logs: {
         Row: {
@@ -197,7 +226,7 @@ export type Database = {
           license_number: string
           notification_preferences: Json | null
           preferred_working_radius: number | null
-          status: Database["public"]["Enums"]["driver_status"] | null
+          status: string | null
           total_deliveries: number | null
           total_earnings: number | null
           total_ratings: number | null
@@ -207,13 +236,11 @@ export type Database = {
           vehicle_make: string | null
           vehicle_model: string | null
           vehicle_number: string
-          vehicle_type: Database["public"]["Enums"]["vehicle_type"]
+          vehicle_type: string
           vehicle_year: number | null
           verification_documents: Json | null
           verification_notes: string | null
-          verification_status:
-            | Database["public"]["Enums"]["verification_status"]
-            | null
+          verification_status: string | null
           verified_at: string | null
           verified_by: string | null
         }
@@ -238,7 +265,7 @@ export type Database = {
           license_number: string
           notification_preferences?: Json | null
           preferred_working_radius?: number | null
-          status?: Database["public"]["Enums"]["driver_status"] | null
+          status?: string | null
           total_deliveries?: number | null
           total_earnings?: number | null
           total_ratings?: number | null
@@ -248,13 +275,11 @@ export type Database = {
           vehicle_make?: string | null
           vehicle_model?: string | null
           vehicle_number: string
-          vehicle_type: Database["public"]["Enums"]["vehicle_type"]
+          vehicle_type: string
           vehicle_year?: number | null
           verification_documents?: Json | null
           verification_notes?: string | null
-          verification_status?:
-            | Database["public"]["Enums"]["verification_status"]
-            | null
+          verification_status?: string | null
           verified_at?: string | null
           verified_by?: string | null
         }
@@ -279,7 +304,7 @@ export type Database = {
           license_number?: string
           notification_preferences?: Json | null
           preferred_working_radius?: number | null
-          status?: Database["public"]["Enums"]["driver_status"] | null
+          status?: string | null
           total_deliveries?: number | null
           total_earnings?: number | null
           total_ratings?: number | null
@@ -289,13 +314,11 @@ export type Database = {
           vehicle_make?: string | null
           vehicle_model?: string | null
           vehicle_number?: string
-          vehicle_type?: Database["public"]["Enums"]["vehicle_type"]
+          vehicle_type?: string
           vehicle_year?: number | null
           verification_documents?: Json | null
           verification_notes?: string | null
-          verification_status?:
-            | Database["public"]["Enums"]["verification_status"]
-            | null
+          verification_status?: string | null
           verified_at?: string | null
           verified_by?: string | null
         }
@@ -384,48 +407,97 @@ export type Database = {
       }
       menu_items: {
         Row: {
-          category: string
+          calories: number | null
+          carbs_grams: number | null
+          category: string | null
+          contains_nuts: boolean | null
           created_at: string | null
+          customization_options: Json | null
           description: string | null
           display_order: number | null
+          fat_grams: number | null
           id: string
           image_url: string | null
           is_available: boolean | null
+          is_gluten_free: boolean | null
+          is_spicy: boolean | null
+          is_vegan: boolean | null
+          is_vegetarian: boolean | null
           menu_id: string | null
           name: string
+          out_of_stock: boolean | null
+          preparation_time: number | null
           price: number
+          protein_grams: number | null
           restaurant_id: string
+          spice_level: number | null
           tags: string[] | null
+          updated_at: string | null
         }
         Insert: {
-          category: string
+          calories?: number | null
+          carbs_grams?: number | null
+          category?: string | null
+          contains_nuts?: boolean | null
           created_at?: string | null
+          customization_options?: Json | null
           description?: string | null
           display_order?: number | null
+          fat_grams?: number | null
           id?: string
           image_url?: string | null
           is_available?: boolean | null
+          is_gluten_free?: boolean | null
+          is_spicy?: boolean | null
+          is_vegan?: boolean | null
+          is_vegetarian?: boolean | null
           menu_id?: string | null
           name: string
+          out_of_stock?: boolean | null
+          preparation_time?: number | null
           price: number
+          protein_grams?: number | null
           restaurant_id: string
+          spice_level?: number | null
           tags?: string[] | null
+          updated_at?: string | null
         }
         Update: {
-          category?: string
+          calories?: number | null
+          carbs_grams?: number | null
+          category?: string | null
+          contains_nuts?: boolean | null
           created_at?: string | null
+          customization_options?: Json | null
           description?: string | null
           display_order?: number | null
+          fat_grams?: number | null
           id?: string
           image_url?: string | null
           is_available?: boolean | null
+          is_gluten_free?: boolean | null
+          is_spicy?: boolean | null
+          is_vegan?: boolean | null
+          is_vegetarian?: boolean | null
           menu_id?: string | null
           name?: string
+          out_of_stock?: boolean | null
+          preparation_time?: number | null
           price?: number
+          protein_grams?: number | null
           restaurant_id?: string
+          spice_level?: number | null
           tags?: string[] | null
+          updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "menu_items_menu_id_fkey"
+            columns: ["menu_id"]
+            isOneToOne: false
+            referencedRelation: "menus"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "menu_items_restaurant_id_fkey"
             columns: ["restaurant_id"]
@@ -546,12 +618,14 @@ export type Database = {
         Row: {
           actual_delivery_time: string | null
           arrived_at: string | null
+          assigned_at: string | null
           cancellation_reason: string | null
           cancelled_at: string | null
           cancelled_by: string | null
+          completed_at: string | null
           confirmed_at: string | null
           created_at: string | null
-          customer_id: string
+          customer_id: string | null
           customer_notes: string | null
           delivered_at: string | null
           delivery_address: string
@@ -579,30 +653,33 @@ export type Database = {
           pickup_contact_phone: string | null
           pickup_latitude: number | null
           pickup_longitude: number | null
+          placed_at: string | null
           preparing_at: string | null
           proof_of_delivery_url: string | null
           ready_at: string | null
           refunded_at: string | null
-          restaurant_id: string
+          restaurant_id: string | null
           restaurant_rating: number | null
           service_charge: number | null
           special_instructions: string | null
-          status: Database["public"]["Enums"]["order_status"] | null
+          status: string
           subtotal: number
           tax: number | null
           tip: number | null
-          total_amount: number
+          total_amount: number | null
           updated_at: string | null
         }
         Insert: {
           actual_delivery_time?: string | null
           arrived_at?: string | null
+          assigned_at?: string | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by?: string | null
+          completed_at?: string | null
           confirmed_at?: string | null
           created_at?: string | null
-          customer_id: string
+          customer_id?: string | null
           customer_notes?: string | null
           delivered_at?: string | null
           delivery_address: string
@@ -630,30 +707,33 @@ export type Database = {
           pickup_contact_phone?: string | null
           pickup_latitude?: number | null
           pickup_longitude?: number | null
+          placed_at?: string | null
           preparing_at?: string | null
           proof_of_delivery_url?: string | null
           ready_at?: string | null
           refunded_at?: string | null
-          restaurant_id: string
+          restaurant_id?: string | null
           restaurant_rating?: number | null
           service_charge?: number | null
           special_instructions?: string | null
-          status?: Database["public"]["Enums"]["order_status"] | null
+          status?: string
           subtotal: number
           tax?: number | null
           tip?: number | null
-          total_amount: number
+          total_amount?: number | null
           updated_at?: string | null
         }
         Update: {
           actual_delivery_time?: string | null
           arrived_at?: string | null
+          assigned_at?: string | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by?: string | null
+          completed_at?: string | null
           confirmed_at?: string | null
           created_at?: string | null
-          customer_id?: string
+          customer_id?: string | null
           customer_notes?: string | null
           delivered_at?: string | null
           delivery_address?: string
@@ -681,19 +761,20 @@ export type Database = {
           pickup_contact_phone?: string | null
           pickup_latitude?: number | null
           pickup_longitude?: number | null
+          placed_at?: string | null
           preparing_at?: string | null
           proof_of_delivery_url?: string | null
           ready_at?: string | null
           refunded_at?: string | null
-          restaurant_id?: string
+          restaurant_id?: string | null
           restaurant_rating?: number | null
           service_charge?: number | null
           special_instructions?: string | null
-          status?: Database["public"]["Enums"]["order_status"] | null
+          status?: string
           subtotal?: number
           tax?: number | null
           tip?: number | null
-          total_amount?: number
+          total_amount?: number | null
           updated_at?: string | null
         }
         Relationships: [
@@ -1078,7 +1159,7 @@ export type Database = {
           created_at: string | null
           email: string
           email_verified: boolean | null
-          full_name: string | null
+          full_name: string
           id: string
           is_active: boolean | null
           last_login_at: string | null
@@ -1092,7 +1173,7 @@ export type Database = {
           created_at?: string | null
           email: string
           email_verified?: boolean | null
-          full_name?: string | null
+          full_name: string
           id: string
           is_active?: boolean | null
           last_login_at?: string | null
@@ -1106,7 +1187,7 @@ export type Database = {
           created_at?: string | null
           email?: string
           email_verified?: boolean | null
-          full_name?: string | null
+          full_name?: string
           id?: string
           is_active?: boolean | null
           last_login_at?: string | null
@@ -1299,66 +1380,120 @@ export type Database = {
       restaurants: {
         Row: {
           accepts_orders: boolean | null
-          city: string | null
+          address: string
+          apartment: string | null
+          avg_preparation_time: number | null
+          banner_url: string | null
+          business_hours: Json | null
+          city: string
+          country: string | null
           created_at: string | null
-          cuisine_type: string
+          cuisine_type: string[]
           delivery_fee: number | null
           delivery_time: string | null
           description: string | null
+          email: string | null
           id: string
           image_url: string | null
           is_active: boolean | null
           is_featured: boolean | null
           is_open: boolean | null
           latitude: number | null
+          logo_url: string | null
           longitude: number | null
+          max_delivery_distance: number | null
           min_order: number | null
           name: string
+          phone: string
+          preparation_time: number | null
           rating: number | null
+          service_charge: number | null
+          special_hours: Json | null
+          state: string
+          tax_rate: number | null
           total_reviews: number | null
+          updated_at: string | null
           user_id: string | null
+          website: string | null
+          zip_code: string
         }
         Insert: {
           accepts_orders?: boolean | null
-          city?: string | null
+          address: string
+          apartment?: string | null
+          avg_preparation_time?: number | null
+          banner_url?: string | null
+          business_hours?: Json | null
+          city: string
+          country?: string | null
           created_at?: string | null
-          cuisine_type: string
+          cuisine_type?: string[]
           delivery_fee?: number | null
           delivery_time?: string | null
           description?: string | null
+          email?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
           is_open?: boolean | null
           latitude?: number | null
+          logo_url?: string | null
           longitude?: number | null
+          max_delivery_distance?: number | null
           min_order?: number | null
           name: string
+          phone: string
+          preparation_time?: number | null
           rating?: number | null
+          service_charge?: number | null
+          special_hours?: Json | null
+          state: string
+          tax_rate?: number | null
           total_reviews?: number | null
+          updated_at?: string | null
           user_id?: string | null
+          website?: string | null
+          zip_code: string
         }
         Update: {
           accepts_orders?: boolean | null
-          city?: string | null
+          address?: string
+          apartment?: string | null
+          avg_preparation_time?: number | null
+          banner_url?: string | null
+          business_hours?: Json | null
+          city?: string
+          country?: string | null
           created_at?: string | null
-          cuisine_type?: string
+          cuisine_type?: string[]
           delivery_fee?: number | null
           delivery_time?: string | null
           description?: string | null
+          email?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
           is_open?: boolean | null
           latitude?: number | null
+          logo_url?: string | null
           longitude?: number | null
+          max_delivery_distance?: number | null
           min_order?: number | null
           name?: string
+          phone?: string
+          preparation_time?: number | null
           rating?: number | null
+          service_charge?: number | null
+          special_hours?: Json | null
+          state?: string
+          tax_rate?: number | null
           total_reviews?: number | null
+          updated_at?: string | null
           user_id?: string | null
+          website?: string | null
+          zip_code?: string
         }
         Relationships: [
           {
@@ -1366,35 +1501,6 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      restaurants_cuisines: {
-        Row: {
-          created_at: string | null
-          cuisine: string
-          id: string
-          restaurant_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          cuisine: string
-          id?: string
-          restaurant_id: string
-        }
-        Update: {
-          created_at?: string | null
-          cuisine?: string
-          id?: string
-          restaurant_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "restaurants_cuisines_restaurant_id_fkey"
-            columns: ["restaurant_id"]
-            isOneToOne: false
-            referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
         ]
@@ -1440,8 +1546,9 @@ export type Database = {
       }
       reviews: {
         Row: {
+          comments: string | null
           created_at: string | null
-          customer_id: string
+          customer_id: string | null
           delivery_speed_rating: number | null
           driver_id: string | null
           driver_rating: number | null
@@ -1456,7 +1563,7 @@ export type Database = {
           moderated_at: string | null
           moderated_by: string | null
           not_helpful_count: number | null
-          order_id: string
+          order_id: string | null
           restaurant_id: string
           restaurant_rating: number | null
           restaurant_responded_at: string | null
@@ -1467,8 +1574,9 @@ export type Database = {
           value_rating: number | null
         }
         Insert: {
+          comments?: string | null
           created_at?: string | null
-          customer_id: string
+          customer_id?: string | null
           delivery_speed_rating?: number | null
           driver_id?: string | null
           driver_rating?: number | null
@@ -1483,7 +1591,7 @@ export type Database = {
           moderated_at?: string | null
           moderated_by?: string | null
           not_helpful_count?: number | null
-          order_id: string
+          order_id?: string | null
           restaurant_id: string
           restaurant_rating?: number | null
           restaurant_responded_at?: string | null
@@ -1494,8 +1602,9 @@ export type Database = {
           value_rating?: number | null
         }
         Update: {
+          comments?: string | null
           created_at?: string | null
-          customer_id?: string
+          customer_id?: string | null
           delivery_speed_rating?: number | null
           driver_id?: string | null
           driver_rating?: number | null
@@ -1510,7 +1619,7 @@ export type Database = {
           moderated_at?: string | null
           moderated_by?: string | null
           not_helpful_count?: number | null
-          order_id?: string
+          order_id?: string | null
           restaurant_id?: string
           restaurant_rating?: number | null
           restaurant_responded_at?: string | null
