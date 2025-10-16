@@ -1,18 +1,46 @@
 import { supabase } from './supabase';
 
+// export async function signUp(email: string, password: string, fullName: string) {
+//   const { data: authData, error: authError } = await supabase.auth.signUp({
+//     email,
+//     password,
+//     options: {
+//       emailRedirectTo: undefined,
+//       data: {
+//         full_name: fullName,
+//       },
+//     },
+//   });
+
+//   if (authError) throw authError;
+
+//   return authData;
+// }
+
 export async function signUp(email: string, password: string, fullName: string) {
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: undefined,
       data: {
         full_name: fullName,
+        user_type: "customer",
+        email_verified: false,
       },
     },
   });
 
   if (authError) throw authError;
+
+  // Optional check for profile creation
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("email", email)
+    .single();
+
+  if (profileError) console.warn("Profile check failed:", profileError);
+  else console.log("Created profile:", profile);
 
   return authData;
 }
